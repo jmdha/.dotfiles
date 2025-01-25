@@ -12,8 +12,6 @@ vim.o.shiftwidth = 4
 vim.o.expandtab = true
 
 -- Sync clipboard between OS and Neovim.
---  Remove this option if you want your OS clipboard to remain independent.
---  See `:help 'clipboard'`
 vim.o.clipboard = 'unnamedplus'
 
 -- Enable break indent
