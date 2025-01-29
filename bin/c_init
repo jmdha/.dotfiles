@@ -1,0 +1,78 @@
+#!/bin/bash
+
+##################################################################
+# Argument Parsing
+##################################################################
+
+if [ "$#" -ne 1 ]; then
+    echo "Expects exactly 1 argument; the name of the project"
+    exit 1
+fi
+
+NAME="$1"
+
+##################################################################
+##################################################################
+
+mkdir -p "$NAME"
+mkdir -p "$NAME/src"
+mkdir -p "$NAME/include"
+
+cat <<EOT >> "$NAME/CMakeLists.txt"
+cmake_minimum_required(VERSION 3.2)
+project($NAME VERSION 0.0.1 LANGUAGES CXX)
+enable_testing()
+include(\${CMAKE_CURRENT_LIST_DIR}/include/CMakeLists.txt)
+
+set(SOURCE
+    src/tmp.cpp
+)
+set(TEST
+    src/tmp.test.cpp
+)
+
+add_executable(\${PROJECT_NAME} src/main.cpp \${SOURCE})
+set_property(TARGET \${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
+
+add_executable(\${PROJECT_NAME}_test \${SOURCE} \${TEST})
+target_link_libraries(\${PROJECT_NAME}_test PRIVATE GTest::gtest_main)
+gtest_discover_tests(\${PROJECT_NAME}_test)
+EOT
+
+cat <<EOT >> "$NAME/include/CMakeLists.txt"
+include(FetchContent)
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
+)
+# For Windows: Prevent overriding the parent project's compiler/linker settings
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+include(GoogleTest)
+EOT
+
+cat <<EOT >> "$NAME/src/main.cpp"
+#include <iostream>
+int main() {
+    std::cout << "Hello World!" << std::endl;
+}
+EOT
+
+cat <<EOT >> "$NAME/src/tmp.hpp"
+int add(int a, int b);
+EOT
+
+cat <<EOT >> "$NAME/src/tmp.cpp"
+#include "tmp.hpp"
+
+int add(int a, int b) { return a + b; }
+EOT
+
+cat <<EOT >> "$NAME/src/tmp.test.cpp"
+#include <gtest/gtest.h>
+#include "tmp.hpp"
+
+TEST(tmp, add) {
+    EXPECT_EQ(add(1, 1), 2);
+}
+EOT
