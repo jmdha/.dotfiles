@@ -32,10 +32,11 @@ set(TEST
 )
 
 add_executable(\${PROJECT_NAME} src/main.cpp \${SOURCE})
-set_property(TARGET \${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
+set_property(TARGET \${PROJECT_NAME} PROPERTY CXX_STANDARD 23)
 
 add_executable(\${PROJECT_NAME}_test \${SOURCE} \${TEST})
 target_link_libraries(\${PROJECT_NAME}_test PRIVATE GTest::gtest_main)
+set_property(TARGET \${PROJECT_NAME}_test PROPERTY CXX_STANDARD 23)
 gtest_discover_tests(\${PROJECT_NAME}_test)
 EOT
 
