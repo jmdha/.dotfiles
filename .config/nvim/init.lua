@@ -29,12 +29,23 @@ vim.g.maplocalleader = ' '
 -- Sync clipboard between OS and Neovim.
 vim.o.clipboard = 'unnamedplus'
 
+-- Indicator at width 60
+vim.o.colorcolumn = "60"
+
 -------------------------------------------------------------------------------------------
 --- FUNCTIONS
 -------------------------------------------------------------------------------------------
 
 local nmap = function(keys, func, desc)
   vim.keymap.set('n', keys, func, { desc = desc })
+end
+
+local vmap = function(keys, func, desc)
+  vim.keymap.set('v', keys, func, { desc = desc })
+end
+
+local tmap = function(keys, func, desc)
+  vim.keymap.set('t', keys, func, { desc = desc })
 end
 
 local amap = function(keys, func, desc)
@@ -46,7 +57,10 @@ end
 -------------------------------------------------------------------------------------------
 
 -- Exit file
-nmap("½", vim.cmd.Ex)
+amap("½", vim.cmd.Ex)
+
+-- Exit terminal mode
+tmap('<Esc>', '<C-\\><C-n>')
 
 -- Binds alt+{h,j,k,l} to move window in all modes
 amap('<A-h>', '<C-\\><C-N><C-w>h')
@@ -58,8 +72,15 @@ amap('<A-l>', '<C-\\><C-N><C-w>l')
 nmap('<leader><Tab>', '<C-\\><C-N><C-w>:tabnext<Enter>')
 nmap('<leader><S-Tab>', '<C-\\><C-N><C-w>:-tabnext<Enter>')
 
--- Open lazygit
-nmap('<leader>g', '<C-\\><C-N>:LazyGit<Enter>')
+-- Text move
+nmap('<S-k>', ':MoveLine  1<CR>')
+nmap('<S-j>', ':MoveLine -1<CR>')
+nmap('<S-h>', ':MoveWord -1<CR>')
+nmap('<S-l>', ':MoveWord  1<CR>')
+vmap('<S-k>', ':MoveBlock   1<CR>')
+vmap('<S-j>', ':MoveBlock  -1<CR>')
+vmap('<S-h>', ':MoveHBlock -1<CR>')
+vmap('<S-l>', ':MoveHBlock  1<CR>')
 
 -- Keybinds for netrw
 vim.api.nvim_create_autocmd('filetype', {
@@ -89,12 +110,6 @@ require("lazy").setup({
 	opts     = ...
     },
     {
-    	'kdheepak/lazygit.nvim',
-	config = function()
-		require("telescope").load_extension("lazygit")
-	end,
-    },
-    {
 	'nvim-telescope/telescope.nvim', 
 	dependencies = 'nvim-lua/plenary.nvim'
     },
@@ -105,29 +120,7 @@ require("lazy").setup({
 		return vim.fn.executable 'make' == 1
 	end,
     },
-    {
-	'nvim-treesitter/nvim-treesitter',
-	dependencies = 'nvim-treesitter/nvim-treesitter-textobjects',
-	build = ':TSUpdate'
-    },
-    {
-	'neovim/nvim-lspconfig',
-	dependencies = 
-	{
-		'mason-org/mason.nvim',
-		'mason-org/mason-lspconfig.nvim',
-		'folke/neodev.nvim'
-	}
-    },
-    {
-	'hrsh7th/nvim-cmp',
-	dependencies = {
-		'L3MON4D3/LuaSnip',
-		'saadparwaiz1/cmp_luasnip',
-		'hrsh7th/cmp-nvim-lsp',
-		'rafamadriz/friendly-snippets',
-	},
-    }
+    "hinell/move.nvim"
 })
 
 -------------------------------------------------------------------------------------------
@@ -151,17 +144,3 @@ nmap('<leader>b',     require('telescope.builtin').buffers,    '[b] Find existin
 nmap('<leader>f',     require('telescope.builtin').git_files,  '[f] Search git files')
 nmap('<leader>s',     require('telescope.builtin').find_files, '[s] Find files')
 nmap('<leader><S-s>', require('telescope.builtin').live_grep,  '[S] Grep files')
-
--------------------------------------------------------------------------------------------
---- LSP
--------------------------------------------------------------------------------------------
-
-nmap('<leader>r', vim.lsp.buf.rename,          '[r] Rename')
-nmap('<leader>c', vim.lsp.buf.code_action,     '[c] Code Action')
-nmap('<leader>d', vim.lsp.buf.definition,      '[d] Goto Definition')
-nmap('<leader>D', vim.lsp.buf.declaration,     '[D] Goto Declaration')
-nmap('<leader>i', vim.lsp.buf.implementation , '[i] Goto Implementation')
-
-require('neodev').setup()
-require('mason').setup()
-require('mason-lspconfig').setup({ ensure_installed = { 'clangd', 'lua_ls' } })
