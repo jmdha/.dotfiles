@@ -29,9 +29,6 @@ vim.g.maplocalleader = ' '
 -- Sync clipboard between OS and Neovim.
 vim.o.clipboard = 'unnamedplus'
 
--- Indicator at width 60
-vim.o.colorcolumn = "60"
-
 -------------------------------------------------------------------------------------------
 --- FUNCTIONS
 -------------------------------------------------------------------------------------------
@@ -72,16 +69,6 @@ amap('<A-l>', '<C-\\><C-N><C-w>l')
 nmap('<leader><Tab>', '<C-\\><C-N><C-w>:tabnext<Enter>')
 nmap('<leader><S-Tab>', '<C-\\><C-N><C-w>:-tabnext<Enter>')
 
--- Text move
-nmap('<S-k>', ':MoveLine  1<CR>')
-nmap('<S-j>', ':MoveLine -1<CR>')
-nmap('<S-h>', ':MoveWord -1<CR>')
-nmap('<S-l>', ':MoveWord  1<CR>')
-vmap('<S-k>', ':MoveBlock   1<CR>')
-vmap('<S-j>', ':MoveBlock  -1<CR>')
-vmap('<S-h>', ':MoveHBlock -1<CR>')
-vmap('<S-l>', ':MoveHBlock  1<CR>')
-
 -- Keybinds for netrw
 vim.api.nvim_create_autocmd('filetype', {
 	pattern = 'netrw',
@@ -104,12 +91,6 @@ vim.api.nvim_create_autocmd('filetype', {
 
 require("lazy").setup({
     {
-	'ellisonleao/gruvbox.nvim',
-	priority = 1000,
-	config   = true,
-	opts     = ...
-    },
-    {
 	'nvim-telescope/telescope.nvim', 
 	dependencies = 'nvim-lua/plenary.nvim'
     },
@@ -120,7 +101,7 @@ require("lazy").setup({
 		return vim.fn.executable 'make' == 1
 	end,
     },
-    "hinell/move.nvim"
+    'rebelot/kanagawa.nvim',
 })
 
 -------------------------------------------------------------------------------------------
@@ -128,7 +109,7 @@ require("lazy").setup({
 -------------------------------------------------------------------------------------------
 
 vim.o.background = "dark" -- or "light" for light mode
-vim.cmd([[colorscheme gruvbox]])
+vim.cmd("colorscheme kanagawa-dragon")
 
 -------------------------------------------------------------------------------------------
 --- Telescope
