@@ -101,8 +101,7 @@ require("lazy").setup({
       return vim.fn.executable 'make' == 1
     end,
   },
-  'bjarneo/vantablack.nvim',
-  'rebelot/kanagawa.nvim',
+  'ellisonleao/gruvbox.nvim',
   'neovim/nvim-lspconfig',
 })
 
@@ -110,7 +109,8 @@ require("lazy").setup({
 --- Theme
 -------------------------------------------------------------------------------------------
 
-vim.cmd("colorscheme vantablack")
+vim.o.background = "dark" -- or "light" for light mode
+vim.cmd([[colorscheme gruvbox]])
 
 -------------------------------------------------------------------------------------------
 --- Telescope
