@@ -9,7 +9,7 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
   if vim.v.shell_error ~= 0 then
     vim.api.nvim_echo({
       { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-      { out, "WarningMsg" },
+      { out,                            "WarningMsg" },
       { "\nPress any key to exit..." },
     }, true, {})
     vim.fn.getchar()
@@ -71,18 +71,18 @@ nmap('<leader><S-Tab>', '<C-\\><C-N><C-w>:-tabnext<Enter>')
 
 -- Keybinds for netrw
 vim.api.nvim_create_autocmd('filetype', {
-	pattern = 'netrw',
-	desc = 'Better mappings for netrw',
-	callback = function()
-		local bind = function(lhs, rhs)
-			vim.keymap.set('n', lhs, rhs, { remap = true, buffer = true })
-		end
+  pattern = 'netrw',
+  desc = 'Better mappings for netrw',
+  callback = function()
+    local bind = function(lhs, rhs)
+      vim.keymap.set('n', lhs, rhs, { remap = true, buffer = true })
+    end
 
-		-- Move up directory
-		bind('½', '-')
-		bind('<leader><Tab>', ':tabnext<Enter>')
-		bind('<leader><S-Tab>', ':-tabnext<Enter>')
-	end
+    -- Move up directory
+    bind('½', '-')
+    bind('<leader><Tab>', ':tabnext<Enter>')
+    bind('<leader><S-Tab>', ':-tabnext<Enter>')
+  end
 })
 
 -------------------------------------------------------------------------------------------
@@ -90,26 +90,27 @@ vim.api.nvim_create_autocmd('filetype', {
 -------------------------------------------------------------------------------------------
 
 require("lazy").setup({
-    {
-	'nvim-telescope/telescope.nvim', 
-	dependencies = 'nvim-lua/plenary.nvim'
-    },
-    {
-	'nvim-telescope/telescope-fzf-native.nvim',
-	build = 'make',
-	cond = function() 
-		return vim.fn.executable 'make' == 1
-	end,
-    },
-    'rebelot/kanagawa.nvim',
+  {
+    'nvim-telescope/telescope.nvim',
+    dependencies = 'nvim-lua/plenary.nvim'
+  },
+  {
+    'nvim-telescope/telescope-fzf-native.nvim',
+    build = 'make',
+    cond = function()
+      return vim.fn.executable 'make' == 1
+    end,
+  },
+  'bjarneo/vantablack.nvim',
+  'rebelot/kanagawa.nvim',
+  'neovim/nvim-lspconfig',
 })
 
 -------------------------------------------------------------------------------------------
 --- Theme
 -------------------------------------------------------------------------------------------
 
-vim.o.background = "dark" -- or "light" for light mode
-vim.cmd("colorscheme kanagawa-dragon")
+vim.cmd("colorscheme vantablack")
 
 -------------------------------------------------------------------------------------------
 --- Telescope
@@ -120,8 +121,15 @@ require('telescope').setup()
 -- Enable telescope fzf native if installed
 pcall(require('telescope').load_extension, 'fzf')
 
-nmap('<leader>o',     require('telescope.builtin').oldfiles,   '[o] Find recently opened files')
-nmap('<leader>b',     require('telescope.builtin').buffers,    '[b] Find existing buffers')
-nmap('<leader>f',     require('telescope.builtin').git_files,  '[f] Search git files')
-nmap('<leader>s',     require('telescope.builtin').find_files, '[s] Find files')
-nmap('<leader><S-s>', require('telescope.builtin').live_grep,  '[S] Grep files')
+nmap('<leader>o', require('telescope.builtin').oldfiles, '[o] Find recently opened files')
+nmap('<leader>b', require('telescope.builtin').buffers, '[b] Find existing buffers')
+nmap('<leader>f', require('telescope.builtin').git_files, '[f] Search git files')
+nmap('<leader>s', require('telescope.builtin').find_files, '[s] Find files')
+nmap('<leader><S-s>', require('telescope.builtin').live_grep, '[S] Grep files')
+
+-------------------------------------------------------------------------------------------
+--- Telescope
+-------------------------------------------------------------------------------------------
+
+vim.lsp.config['gopls'] = {}
+vim.lsp.enable('gopls')
