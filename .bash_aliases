@@ -1,10 +1,8 @@
-alias downward="~/Programs/downward/fast-downward.py"
-alias VAL="~/Programs/VAL/build/bin/Validate"
+# Misc
+alias reload="source ~/.bashrc"
 
-gc() {
-    git clone --recurse-submodules git@github.com:jmdha/$1.git
-}
+# Git
+alias lg=lazygit
 
-lama() {
-    downward --alias lama-first $1 $2
-}
+# Network
+alias ports="lsof -i -P -n | grep LISTEN"
