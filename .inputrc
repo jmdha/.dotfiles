@@ -2,9 +2,4 @@
 bind '"\C-f": "fg\n"'
 
 # Bind ctrl + g fzf background jobs
-fzf_fg() {
-  local job
-  job=$(jobs | fzf --height 40% --reverse --border --prompt="fg> " | sed -E 's/^\[([0-9]+).*/\1/')
-  [[ -n "$job" ]] && fg "%$job"
-}
-bind -x '"\C-g": fzf_fg'
+bind -x '"\C-g": fg %$(jobs|fzf|cut -d] -f1|tr -d \[)'
